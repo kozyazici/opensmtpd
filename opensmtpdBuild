@@ -1,0 +1,11 @@
+# opensmtpd
+
+
+pkg_add vim
+pkg_add OpenSMTPD-extras-mysql
+pkg_check
+pkg_add -v Mariadb-server
+/usr/local/bin/mysql_install_db
+/etc/rc.d/mysqld start
+
+
