@@ -8,4 +8,112 @@ pkg_add -v Mariadb-server
 /usr/local/bin/mysql_install_db
 /etc/rc.d/mysqld start
 
+/usr/local/bin/mysql_secure_installation
+root-> yeni password oluşturup mysql ve mariadb kurulumunu tamamladım.
+
+vim /etc/mail/smtpd.conf
+vim /etcmail/mysql.conf
+
+rcctl enable smtpd
+rcctl enable mysqld
+rcctl start smtpd
+rcctl start mysqld
+smtpd
+
+
+
+username@example.com>: 550-Invalid recipient username@example.com problemi üzerinde çalışıyorum.
+
+
+
+
+Connected to smtp://mx1.domain.com:587/?starttls=when-available
+<< 220 mx1.domain.com ESMTP OpenSMTPD
+
+        EHLO [IP]
+        << 250-mx1.domain.com Hello [IP] [IP], pleased to meet you
+        << 250-8BITMIME
+        << 250-ENHANCEDSTATUSCODES
+        << 250-SIZE 36700160
+        << 250-DSN
+        << 250-STARTTLS
+        << 250 HELP
+        STARTTLS
+        << 220 2.0.0: Ready to start TLS
+        EHLO [IP]
+        << 250-mx1.domain.com Hello [IP] [IP], pleased to meet you
+        << 250-8BITMIME
+        << 250-ENHANCEDSTATUSCODES
+        << 250-SIZE 36700160
+        << 250-DSN
+        << 250-AUTH PLAIN LOGIN
+        << 250 HELP
+        AUTH PLAIN AABwYXJ0YTIwMTk=
+        << 535 Authentication failed
+        AUTH LOGIN
+        << 334 VXNlcm5hbWU6
+
+<< 334 UGFzc3dvcmQ6
+
+        cGFydGEyMDE5
+        << 535 Authentication failed
+        ERROR: AuthenticationInvalidCredentials: Authentication failed
+
+
+/etc/my.cnf
+password = değişikliği
+
+
+
+pkg_add clamav
+pkg_add Spamassassin
+pkg_add spmapd
+pkg_add clamsmtp
+
+
+tail -f /var/log/maillog
+mx1 dovecot: pop3-login: Disconnected (auth failed, 1 attempts in 2 secs): user=, method=PLAIN, rip=IP, lip=IP, TLS, session=
+
+
+
+wormly'de pop mail success veriyor ama mail uygulamasında imap-login,pop3 te Error: Mailbox INBOX: Failed to autocreate mailbox: Internal error occurred. Refer to server log for more information. hatasını alıyorum.
+
+smtpd -dv -T mta
+relay ile ilgili bir problem vermekte ve mta'ya yansıtmakta ve routing yapılamıyor.
+
+
+mailq
+smtpctl remove all
+rcctl -d restart dovecot
+rcctl -d restart smtpd
+
+
+
+
+doing _rc_parse_conf
+doing _rc_quirks
+smtpd_flags empty, using default ><
+doing _rc_parse_conf /var/run/rc.d/smtpd
+doing _rc_quirks
+doing _rc_parse_conf
+doing _rc_quirks
+smtpd_flags empty, using default ><
+doing _rc_parse_conf /var/run/rc.d/smtpd
+doing _rc_quirks
+doing rc_check
+doing _rc_parse_conf
+doing _rc_quirks
+smtpd_flags empty, using default ><
+doing _rc_parse_conf /var/run/rc.d/smtpd
+doing _rc_quirks
+doing rc_check
+smtpd --------> Problemli yer. Debug reverse
+doing rc_start
+doing _rc_wait start
+doing rc_check
+doing _rc_write_runfile
+(ok)
+
+
+
 
