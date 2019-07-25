@@ -116,4 +116,56 @@ doing _rc_write_runfile
 
 
 
+pkg_add sieve
 
+#smtpd -dvT all
+/etc/mail/smtpd.conf:21: syntax error
+/etc/mail/smtpd.conf:24: syntax error
+/etc/mail/smtpd.conf:27: syntax error
+/etc/mail/smtpd.conf:30: syntax error
+/etc/mail/smtpd.conf:34: syntax error
+warn: no rules, nothing to do
+
+
+#
+table domains mysql:/etc/mail/mysql.conf
+table credentials mysql:/etc/mail/mysql.conf
+table virtuals mysql:/etc/mail/mysql.conf
+table aliases mysql:/etc/mail/mysql.conf
+#
+pki mx1.domain.com cert "/etc/ssl/mx1.domain.com.crt"
+pki mx1.domain.com key "/etc/ssl/private/mx1.domain.com.key"
+#
+
+
+listen on lo0
+listen on lo0 port 10026 tag CLAM_IN # incoming mail
+listen on lo0 port 10028 tag CLAM_OUT # outgoing mail
+listen on lo0 port 10036 tag SPAM_IN # incoming mail
+listen on lo0 port 10029 tag DKIM_OUT # outgoing mail
+listen on egress tls pki mx1.domain.com auth-optional
+listen on egress port submission tls-require pki mx1.domain.com auth
+
+
+accept for local alias <aliases> deliver to maildir
+
+# tagged mail returned from dkimproxy_out relay out
+accept tagged DKIM_OUT for any relay hostname mx1.domain.com
+
+# tagged mail returned from spampd deliver to lmtp
+accept tagged SPAM_IN for domain <domains> virtual <virtuals> deliver to lmtp "/var/dovecot/lmtp"
+
+# tagged mail returned from clamsmtpd either send to spampd or dkimproxy_out
+accept tagged CLAM_IN for any relay via smtp://127.0.0.1:10035 # send to spampd
+accept tagged CLAM_OUT for any relay via smtp://127.0.0.1:10030 # send to dkimproxy_out
+
+# start here - untagged mail is sent to clamsmtpd
+accept from any for domain <domains> relay via smtp://127.0.0.1:10025 # incoming mail
+accept from local for any relay via smtp://127.0.0.1:10027 # outgoing mail
+~                                                                                         
+~                                                                                         
+~                                                                                         
+~                                                                                         
+~                                                                                         
+~                                                                                         
+~                                                  
